@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+import { openai, openAIErrorResponse } from '@/lib/openai';
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,7 +25,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (err: unknown) {
     console.error('TTS error:', err);
-    const message = err instanceof Error ? err.message : 'TTS failed';
-    return NextResponse.json({ error: message }, { status: 500 });
+    return openAIErrorResponse(err, 'TTS failed');
   }
 }

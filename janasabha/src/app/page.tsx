@@ -86,7 +86,7 @@ export default function CitizenPage() {
       setTranscript(data.transcript);
       setStep('transcript');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Transcription failed');
+      setError(err instanceof Error ? err.message : 'Transcription failed. Please try again.');
       setStep('idle');
     }
   };
@@ -123,7 +123,10 @@ export default function CitizenPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: draft }),
       });
-      if (!res.ok) throw new Error('TTS failed');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Could not generate audio');
+      }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);

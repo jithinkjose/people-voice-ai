@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+import { openai, openAIErrorResponse } from '@/lib/openai';
 
 export async function POST(req: NextRequest) {
   try {
@@ -79,7 +77,6 @@ Reply with only the category name, nothing else.`,
     return NextResponse.json({ draft, category });
   } catch (err: unknown) {
     console.error('Draft generation error:', err);
-    const message = err instanceof Error ? err.message : 'Draft generation failed';
-    return NextResponse.json({ error: message }, { status: 500 });
+    return openAIErrorResponse(err, 'Draft generation failed');
   }
 }

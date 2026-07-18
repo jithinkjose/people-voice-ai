@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
 import { writeFile, unlink } from 'fs/promises';
 import path from 'path';
 import os from 'os';
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+import { openai, openAIErrorResponse } from '@/lib/openai';
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,7 +30,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ transcript: transcription.text });
   } catch (err: unknown) {
     console.error('Transcription error:', err);
-    const message = err instanceof Error ? err.message : 'Transcription failed';
-    return NextResponse.json({ error: message }, { status: 500 });
+    return openAIErrorResponse(err, 'Transcription failed');
   }
 }

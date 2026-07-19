@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      MOCK_OPENAI: ${MOCK_OPENAI:-true}
+      MOCK_WHATSAPP: ${MOCK_WHATSAPP:-true}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+      TWILIO_WHATSAPP_FROM: ${TWILIO_WHATSAPP_FROM:-}
+      MOCK_OTP: ${MOCK_OTP:-true}
+      DEMO_MEMBER_PHONE: ${DEMO_MEMBER_PHONE:-9999999999}
+      DEMO_MEMBER_NAME: ${DEMO_MEMBER_NAME:-Ward Councillor (Demo)}
+      DB_PATH: /app/data/janasabha.db
+    volumes:
+      - ./data:/app/data
